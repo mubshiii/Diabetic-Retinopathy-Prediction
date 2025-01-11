@@ -212,7 +212,7 @@ def docprofile_post(request, id):
         date = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         fs = FileSystemStorage()
         fs.save(
-            r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\doctor_photos\\" + date + '.jpg',
+            r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\images\\" + date + '.jpg',
             image)
         path = "/static/doctor_photos/" + date + '.jpg'
         email = request.POST['email']
@@ -313,7 +313,7 @@ def register_doc_post(request):
     image = request.FILES['image']
     date = datetime.datetime.now().strftime("%Y%m%d-%H%M%S%f")
     fs = FileSystemStorage()
-    fs.save(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\doctor_photos\\" + date + '.jpg',
+    fs.save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\images\\" + date + '.jpg',
             image)
     path = "/static/doctor_photos/" + date + '.jpg'
     email = request.POST['email']
@@ -322,7 +322,7 @@ def register_doc_post(request):
     # longitude = request.POST['longitude']
     date = datetime.datetime.now().strftime("%Y%m%d-%H%M%S%f")
     qualification = request.FILES['qualification']
-    fs.save(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\doctor_photos\\" + date + '.pdf',
+    fs.save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\images\\" + date + '.pdf',
             qualification)
     qpath = "/static/doctor_photos/" + date + ".pdf"
     password = request.POST['password']
