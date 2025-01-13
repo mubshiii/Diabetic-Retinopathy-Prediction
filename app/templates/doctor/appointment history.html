@@ -1,33 +1,50 @@
-{#<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">#}
-{#<html xmlns="http://www.w3.org/1999/xhtml">#}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
 {#<head>#}
-{#<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />#}
-{#<title>Patient Details</title>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Appointment History</title>#}
 {#</head>#}
-{##}
 {#<body>#}
-{#<h2>Patients</h2>#}
-{#<table width="200" border="1">#}
-{#  <tr>#}
-{#    <th scope="col">slno</th>#}
-{#    <th scope="col">name</th>#}
-{#    <th scope="col">email</th>#}
-{#    <th scope="col">phn no</th>#}
-{#    <th scope="col">location</th>#}
-{#      <th scope="col">chat</th>#}
-{#  </tr>#}
-{#    {% for i in data %}#}
-{#  <tr>#}
-{#    <td>{{ forloop.counter }}</td>#}
-{#        <td>{{ i.name }}</td>#}
-{#    <td>{{i.email }}</td>#}
-{#    <td>{{ i.phone_no }}&nbsp;</td>#}
-{#    <td><a href="">track</a>&nbsp;</td>#}
-{#     <td><a href="/chatt/{{ i.id }}">chat</a></td>#}
-{#    </tr>#}
-{#      {% endfor %}#}
+{#<h2>Appointment History</h2>#}
+{#    <form action="/appointment_history_post" method="post">#}
+{#    <label for="SDate">Date Search:</label>#}
+{#    <input type="date" id="SDate" name="SDate">#}
 {##}
-{#</table>#}
+{#    <button type="submit">Search</button>#}
+{#        <table width="358" border="1">#}
+{##}
+{#          <tr>#}
+{#            <td>Appointment No</td>#}
+{#            <td>Appointment Id</td>#}
+{#            <td>Username</td>#}
+{#            <td>Contact No</td>#}
+{#              <td>Email ID</td>#}
+{#           <td>Prescription</td>#}
+{#              <td>Talk to Patient</td>#}
+{#          </tr>#}
+{##}
+{#            {% for i in data %}#}
+{#            <tr>#}
+{#            <td>{{forloop.counter }}</td>#}
+{#            <td>{{ i.APPOINTMENT.id }}</td>#}
+{#            <td>{{ i.APPOINTMENT.USER.name }}</td>#}
+{#            <td>{{ i.APPOINTMENT.USER.phone_no }}</td>#}
+{#              <td>{{ i.APPOINTMENT.USER.email }}</td>#}
+{#                <td><a href="{{ i.Prescription }}">view</a> </td>#}
+{#                <td><a href="/chatt/{{ i.APPOINTMENT.USER.id }}">chat</a> </td>#}
+{#          </tr>#}
+{#            {% endfor %}#}
+{#        {% for i in data %}#}
+{##}
+{#          <tr>#}
+{#              <td>{{ i.Date }}</td>#}
+{##}
+{#            <td>{{ i.Time }}</td>#}
+{#          </tr>#}
+{#             {% endfor %}#}
+{#        </table>#}
+{##}
+{#    </form>#}
 {##}
 {#</body>#}
 {#</html>#}
@@ -40,12 +57,12 @@
 <meta charset="utf-8">
 <title>Care Plus</title>
 <!-- Stylesheets -->
-<link href="static/assets/css/images/bootstrap.css" rel="stylesheet">
-<link href="static/assets/css/images/style.css" rel="stylesheet">
+<link href="/static/assets/css/images/bootstrap.css" rel="stylesheet">
+<link href="/static/assets/css/images/style.css" rel="stylesheet">
 <!-- Responsive File -->
-<link href="static/assets/css/images/responsive.css" rel="stylesheet">
+<link href="/static/assets/css/images/responsive.css" rel="stylesheet">
 <!-- Color File -->
-<link href="static/assets/css/images/color.css" rel="stylesheet">
+<link href="/static/assets/css/images/color.css" rel="stylesheet">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,8 +72,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-<link rel="shortcut icon" href="static/assets/images/logo.jpg" type="image/x-icon">
-<link rel="icon" href="static/assets/images/logo.jpg" type="image/x-icon">
+<link rel="shortcut icon" href="/static/assets/images/logo.svg" type="image/x-icon">
+<link rel="icon" href="/static/assets/images/logo.png" type="image/x-icon">
 
 <!-- Responsive -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -280,7 +297,7 @@
                 <div class="inner-container">
                     <!--Logo-->
                     <div class="logo-box">
-                        <div class="logo"><a href=""><img src="static/assets/images/logo.jpg" style = "width:200px" alt=""></a></div>
+                        <div class="logo"><a href="Doc_home"><img src="https://ujwalvinay.com/project/logo.webp" style = "width:200px" alt=""></a></div>
                     </div>
 
                     <div class="link-btn"><a href="/" class="theme-btn btn-style-one"><span>Log Out</span></a></div>
@@ -296,13 +313,12 @@
                     <div class="inner-container">
                         <!--Logo-->
                         <div class="logo-box">
-{#                            <div class="logo"><a href="index.html"><img src="static/assets/images/logo.jpg" alt=""></a></div>#}
-                            <h2>Logo</h2>
+{#                            <div class="logo"><a href="index.html"><img src="https://ujwalvinay.com/project/logo.webp" style = "width:200px" alt=""></a></div>
                         </div>
                         <!--Nav Box-->
                         <div class="nav-outer">
                             <!--Mobile Navigation Toggler-->
-                            <div class="mobile-nav-toggler"><img src="static/assets/images/logo.jpg" alt=""></div>
+                            <div class="mobile-nav-toggler"><img src="/static/assets/images/icons/icon-bar-2.png" alt=""></div>
 
                             <!-- Main Menu -->
                             <nav class="main-menu navbar-expand-md navbar-light">
@@ -338,39 +354,51 @@
 
   <div class="formbold-form-wrapper">
       <div class="schedule_table">
-        <h2>View Patients</h2>
+        <h2>Appointment History</h2>
     <form action="/appointment_history_post" method="post">
-
+        <div style="display: flex; gap:2rem; margin-bottom:2rem; align-items:center;" >
+            <label for="SDate" >Date Search:</label>
+            <input type="date"  class="formbold-form-input formbold-w-45" id="SDate" name="SDate">
+            <button type="submit" class="theme-btn btn-style-one"><span>Search</span></button>
+        </div>
+    </form>
+    <form action="/appointment_history_name_filter" method="post">
+        <div style="display: flex; gap:2rem; margin-bottom:2rem; align-items:center;" >
+            <label for="SDate" >Name Search:</label>
+            <input type="text"  class="formbold-form-input formbold-w-45" id="name" name="name">
+            <button type="submit" class="theme-btn btn-style-one"><span>Filter</span></button>
+        </div>
+    </form>
 
         <table class="table">
           <thead>
             <tr>
-                <th scope="col">si no</th>
-                <th scope="col">name</th>
-                <th scope="col">email</th>
-                <th scope="col">phn no</th>
-                <th scope="col">location</th>
-{#                <th scope="col">chat</th>#}
+                    <th>Appointment No</th>
+{#                    <th>Appointment Id</th>#}
+                    <th>Patient Name</th>
+                    <th>Contact No</th>
+                    <th>Email ID</th>
+                   <th>Prescription</th>
+                   <th>Breast Cancer History</th>
             </tr>
           </thead>
           <tbody>
-                {% for i in data %}
-                  <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ i.name }}</td>
-                    <td>{{i.email }}</td>
-                    <td>{{ i.phone_no }}&nbsp;</td>
-                    <td><a href="">track</a>&nbsp;</td>
-{#                    <td><a href="/chatt/{{ i.id }}">chat</a></td>#}
-                  </tr>
-      {% endfor %}
+            {% for i in data %}
+             <tr>
+                    <td>{{forloop.counter }}</td>
+{#                    <td>{{ i.APPOINTMENT.id }}</td>#}
+                    <td>{{ i.USER.name }}</td>
+                    <td>{{ i.USER.phone_no }}</td>
+                      <td>{{ i.USER.email }}</td>
+                        <td><a href="/viewprescription/{{ i.id }}">View</a> </td>
+                        <td><a href="/view_prediction_history/{{ i.USER.id }}">View</a> </td>
+             </tr>
+                    {% endfor %}
           </tbody>
         </table>
 
 
 
-
-    </form>
     </div>
   </div>
 </div>
@@ -388,10 +416,10 @@
                                 <ul class="list">
                                     <li  ><a href="/Doc_Profile">Profile Management</a></li>
                                     <li ><a href="/schedule">Schedule Management</a></li>
-                                    <li ><a href="/appointment_history">Appointment History</a></li>
-                                    <li ><a href="Review_View">View Rating & Review</a></li>
+                                    <li class="active"><a href="/appointment_history">Appointment History</a></li>
+                                    <li><a href="Review_View">View Rating & Review</a></li>
                                     <li><a href="paymentHistory">View Payment History</a></li>
-                                    <li class="active"><a href="patients">Patients</a></li>
+                                    <li><a href="patients">Patients</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -409,7 +437,7 @@
     <div class="footer-bottom">
         <div class="auto-container">
             <div class="content">
-                <p>Copyright © 2025 Care Plus. All Rights Reserved.</p>
+                <p>Copyright © 2025 Care Plus.</p>
             </div>
         </div>
     </div>
@@ -419,24 +447,24 @@
 <!--Scroll to top-->
 <div class="scroll-to-top scroll-to-target" data-target="html"><span class="flaticon-right-arrow-4"></span></div>
 
-<script src="static/assets/js/jquery.js"></script>
-<script src="static/assets/js/popper.min.js"></script>
-<script src="static/assets/js/bootstrap.min.js"></script>
-<script src="static/assets/js/bootstrap-select.min.js"></script>
-<script src="static/assets/js/jquery.fancybox.js"></script>
-<script src="static/assets/js/isotope.js"></script>
-<script src="static/assets/js/owl.js"></script>
-<script src="static/assets/js/appear.js"></script>
-<script src="static/assets/js/wow.js"></script>
+<script src="/static/assets/js/jquery.js"></script>
+<script src="/static/assets/js/popper.min.js"></script>
+<script src="/static/assets/js/bootstrap.min.js"></script>
+<script src="/static/assets/js/bootstrap-select.min.js"></script>
+<script src="/static/assets/js/jquery.fancybox.js"></script>
+<script src="/static/assets/js/isotope.js"></script>
+<script src="/static/assets/js/owl.js"></script>
+<script src="/static/assets/js/appear.js"></script>
+<script src="/static/assets/js/wow.js"></script>
 <script src="astatic/ssets/js/lazyload.js"></script>
 <script src="astatic/ssets/js/scrollbar.js"></script>
-<script src="static/assets/js/TweenMax.min.js"></script>
-<script src="static/assets/js/swiper.min.js"></script>
-<script src="static/assets/js/jquery.polyglot.language.switcher.js"></script>
-<script src="static/assets/js/jquery.ajaxchimp.min.js"></script>
-<script src="static/assets/js/parallax-scroll.js"></script>
+<script src="/static/assets/js/TweenMax.min.js"></script>
+<script src="/static/assets/js/swiper.min.js"></script>
+<script src="/static/assets/js/jquery.polyglot.language.switcher.js"></script>
+<script src="/static/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/static/assets/js/parallax-scroll.js"></script>
 
-<script src="static/assets/js/script.js"></script>
+<script src="/static/assets/js/script.js"></script>
 
 
 </body>
