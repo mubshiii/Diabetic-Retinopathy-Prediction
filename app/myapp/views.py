@@ -16,7 +16,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from myapp.models import *
 
-e_email="luminacarebcd@gmail.com"
+e_email="careplus@gmail.com"
 emailpassword="cmkk ggxb otdm ghmf"
 
 
@@ -789,7 +789,7 @@ def android_register(request):
     image = request.FILES['pic']
     d = datetime.datetime.now().strftime('%d%m%Y-%H%M%S')
     FileSystemStorage().save(
-        r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\user_photo\\" + d + '.jpg', image)
+        r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\user_photo\\" + d + '.jpg', image)
 
     if Login.objects.filter(username=email).exists():
         return JsonResponse({"status": "Email Already Exists"})
@@ -819,7 +819,7 @@ def prediction(request):
     # if os.path.exists(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\\" + fname):
     #     os.remove(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\\" + fname)
     img = request.FILES['pic']
-    FileSystemStorage().save(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\\" + fname, img)
+    FileSystemStorage().save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\\" + fname, img)
     path = "/static/" + fname
     import numpy as np
     import pandas as pd
