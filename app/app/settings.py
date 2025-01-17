@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'drdb',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '240104',
         'HOST': 'localhost',
         'PORT': '3306',  # Update the port here
     }
