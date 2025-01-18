@@ -902,3 +902,65 @@ def android_view_prediction(request):
             "date":i.date, "pred":i.result, "image":i.image, "id":i.id
         })
     return JsonResponse({"status": "ok", "users": data})
+
+
+import os
+from django.shortcuts import render
+from django.core.files.storage import FileSystemStorage
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+import tensorflow as tf
+
+# Load the trained model
+model = load_model("myapp/models/diabetic_retinopathy_model169_finetuned_20epochs.h5")
+
+# Class labels
+class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
+
+def predict_diabetic_retinopathy(img_path):
+    """Predict the stage of diabetic retinopathy from an image."""
+    # Load and preprocess the image
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    img_array = tf.keras.applications.densenet.preprocess_input(img_array)
+    
+    # Make prediction
+    predictions = model.predict(img_array)
+    predicted_class = np.argmax(predictions)
+    confidence = np.max(predictions)
+
+    return class_labels[predicted_class], confidence
+
+def upload_image(request):
+    predicted_stage = None
+    confidence = None
+    image_url = None
+    
+    if request.method == 'POST' and request.FILES['image']:
+        uploaded_image = request.FILES['image']
+        
+        # Specify the folder where the image should be saved (e.g., 'uploads' folder inside 'media')
+        folder_path = os.path.join('myapp','static', 'assets','predictionimages')
+        
+        # Make sure the folder exists
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        
+        # Save the uploaded image in the specified folder
+        fs = FileSystemStorage(location=folder_path)
+        filename = fs.save(uploaded_image.name, uploaded_image)
+        uploaded_image_path = fs.url(filename)
+
+        # Predict the DR stage
+        img_path = os.path.join(folder_path, filename)  # Path to the uploaded image
+        predicted_stage, confidence = predict_diabetic_retinopathy(img_path)
+
+        image_url = uploaded_image_path  # URL of the uploaded image
+
+    return render(request, 'upload_and_predict.html', {
+        'predicted_stage': predicted_stage,
+        'confidence': confidence,
+        'image_url': image_url
+    })

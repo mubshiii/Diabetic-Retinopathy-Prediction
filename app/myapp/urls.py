@@ -71,4 +71,7 @@ urlpatterns = (
     path('android_view_prescription', views.android_view_prescription),
     path('android_view_prediction', views.android_view_prediction),
 
+    #training
+    path('train/', views.upload_image, name='upload_image'),
+
 )
