@@ -212,7 +212,7 @@ def docprofile_post(request, id):
         date = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         fs = FileSystemStorage()
         fs.save(
-            r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\images\\" + date + '.jpg',
+            r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\doctor_photos"+ date + '.jpg',
             image)
         path = "/static/doctor_photos/" + date + '.jpg'
         email = request.POST['email']
@@ -313,7 +313,7 @@ def register_doc_post(request):
     image = request.FILES['image']
     date = datetime.datetime.now().strftime("%Y%m%d-%H%M%S%f")
     fs = FileSystemStorage()
-    fs.save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\images\\" + date + '.jpg',
+    fs.save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\doctor_photos" + date + '.jpg',
             image)
     path = "/static/doctor_photos/" + date + '.jpg'
     email = request.POST['email']
@@ -322,7 +322,7 @@ def register_doc_post(request):
     # longitude = request.POST['longitude']
     date = datetime.datetime.now().strftime("%Y%m%d-%H%M%S%f")
     qualification = request.FILES['qualification']
-    fs.save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\images\\" + date + '.pdf',
+    fs.save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\doctor_photos" + date + '.pdf',
             qualification)
     qpath = "/static/doctor_photos/" + date + ".pdf"
     password = request.POST['password']
@@ -789,7 +789,7 @@ def android_register(request):
     image = request.FILES['pic']
     d = datetime.datetime.now().strftime('%d%m%Y-%H%M%S')
     FileSystemStorage().save(
-        r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\assets\user_photo\\" + d + '.jpg', image)
+        r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\user_photo\\" + d + '.jpg', image)
 
     if Login.objects.filter(username=email).exists():
         return JsonResponse({"status": "Email Already Exists"})
