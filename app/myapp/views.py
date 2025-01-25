@@ -6,11 +6,12 @@ import smtplib
 from datetime import timedelta
 import os
 from email.mime.text import MIMEText
-
+from django.http import HttpResponse, request, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
-from django.http import HttpResponse, request, JsonResponse
+
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -456,17 +457,18 @@ def upload_mri_doc_post(request, id):
 
     return HttpResponse("<script>alert('Result : "+str(cls[0])+"');window.location='/upload_mri_doc/"+id+"';</script>")
 
-
+@csrf_exempt
 def appointment_history(request):
     ress = Appointment.objects.filter(Schedule__DOCTOR__LOGIN=request.session['lid'])
     return render(request, 'doctor/appointment history.html', {"data": ress})
 
-
+@csrf_exempt
 def appointment_history_post(request):
     date = request.POST['SDate']
     ress = Appointment.objects.filter(Schedule__DOCTOR__LOGIN=request.session['lid'], Date=date)
     return render(request, 'doctor/appointment history.html', {"data": ress})
 
+@csrf_exempt
 def appointment_history_name_filter(request):
     name = request.POST['name']
     ress = Appointment.objects.filter(USER__name__contains=name,Schedule__DOCTOR__LOGIN=request.session['lid'])
@@ -560,7 +562,7 @@ def patient_details(request):
     obj = User.objects.all()
     return render(request, 'doctor/patients_list.html', {"data": obj})
 
-
+@csrf_exempt
 def and_login(request):
     usn = request.POST['usr']
     psd = request.POST['psw']
@@ -570,7 +572,7 @@ def and_login(request):
         return JsonResponse({"status": "ok", "lid": obj[0].id, "name": ob.name, "image": ob.image, "email": ob.email})
     return JsonResponse({"status": "no"})
 
-
+@csrf_exempt
 def android_view_doc(request):
     latitude = request.POST['latitude']
     longitude = request.POST['longitude']
@@ -600,7 +602,7 @@ def android_view_doc(request):
     li.sort(key=hospital_nearby_sort)
     return JsonResponse({"status": "ok", "users": li})
 
-
+@csrf_exempt
 def android_view_schedule(request):
     did = request.POST["did"]
     res = Schedule.objects.filter(DOCTOR=did)
@@ -617,7 +619,7 @@ def android_view_schedule(request):
         })
     return JsonResponse({"status": "ok", "users": li})
 
-
+@csrf_exempt
 def book_appointment(request):
     lid = request.POST["lid"]
     sid = request.POST["schid"]
@@ -661,7 +663,7 @@ def book_appointment(request):
         Schedule.objects.filter(id=sid).update(Token=tt)
         return JsonResponse({"status": "ok"})
 
-
+@csrf_exempt
 def android_view_appointment(request):
     lid = request.POST['lid']
     data = Appointment.objects.filter(USER__LOGIN=lid)
@@ -680,7 +682,7 @@ def android_view_appointment(request):
         })
     return JsonResponse({"status": "ok", "users": ary})
 
-
+@csrf_exempt
 def and_send_review(request):
     lid = request.POST['lid']
     did = request.POST['did']
@@ -696,7 +698,7 @@ def and_send_review(request):
     obj.save()
     return JsonResponse({"status": "ok"})
 
-
+@csrf_exempt
 def android_view_reply(request):
     lid = request.POST['lid']
     data = Complaint.objects.filter(USER__LOGIN=lid)
@@ -761,7 +763,6 @@ def view_chat(request):
         })
     return JsonResponse({'status': "ok", 'data': ar})
 
-
 def viewprescription(request, id):
     data = Prescription.objects.filter(APPOINTMENT=id)
     return render(request, 'doctor/viewprescription.html', {"data": data})
@@ -777,7 +778,7 @@ def and_viewprescription(request):
     data = Prescription.objects.get(APPOINTMENT=aid)
     return JsonResponse({"status": "ok", "imag": data.Prescription})
 
-
+@csrf_exempt
 def android_register(request):
     name = request.POST['na']
     email = request.POST['em']
@@ -876,7 +877,7 @@ def prediction(request):
 
     return JsonResponse({"status": "ok", "result": cls[0]})
 
-
+@csrf_exempt
 def android_view_prescription(request):
     aid = request.POST['aid']
 
@@ -892,7 +893,7 @@ def upload_mri(request):
     return None
 
 
-
+@csrf_exempt
 def android_view_prediction(request):
     lid = request.POST['lid']
     obj = PredictionResult.objects.filter(USER__LOGIN_id=lid)
