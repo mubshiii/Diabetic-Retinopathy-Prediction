@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Lumina Care</title>
+<title>Care Plus</title>
 <!-- Stylesheets -->
 <link href="/static/assets/css/images/bootstrap.css" rel="stylesheet">
 <link href="/static/assets/css/images/style.css" rel="stylesheet">
@@ -303,14 +303,14 @@
 
   <div class="formbold-form-wrapper">
       <div class="schedule_table">
-        <h2>Upload Ultrasound</h2>
+        <h2>Upload Retinal Image</h2>
     <form action="/upload_retinal_doc_post/{{ aid }}" method="post" enctype="multipart/form-data" >
         {% csrf_token %}
       <table width="200" border="1" class="table">
           <thead>
         <tr>
           <th scope="row">Upload Retinal Image</th>
-          <td><input type="file" name="mri" class="form-control" required></td>
+          <td><input type="file" name="retinalimage" class="form-control" required></td>
         </tr>
 
 

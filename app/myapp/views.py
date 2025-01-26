@@ -364,67 +364,70 @@ def appointments(request, id):
 
 def upload_retinal_doc(request, id):
     return render(request, "doctor/uploadretinalimage.html", {'aid':id})
+import os
+import datetime
+from django.shortcuts import HttpResponse
+from django.core.files.storage import FileSystemStorage
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+from myapp.models import Appointment, PredictionResult  # Ensure correct imports for your models
+
+# Load the trained diabetic retinopathy model
+model = load_model("myapp/models/diabetic_retinopathy_model169_finetuned_20epochs.h5")
+
+# Class labels for diabetic retinopathy
+class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
+
+def predict_diabetic_retinopathy(img_path):
+    """Predict diabetic retinopathy stage from an image."""
+    # Load and preprocess the image
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    img_array = img_array / 255.0  # Normalize pixel values to [0, 1]
+    
+    # Make prediction
+    predictions = model.predict(img_array)
+    predicted_class = np.argmax(predictions)
+    confidence = np.max(predictions)
+    return class_labels[predicted_class], confidence
+
 def upload_retinal_doc_post(request, id):
-    img=request.FILES['mri']
+    img = request.FILES['retinalimage']
     fname = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
-    FileSystemStorage().save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\fassets\predictionimages" + fname, img)
-    path = "/static/" + fname
-    import numpy as np
-    import pandas as pd
-    from skimage import io, color, img_as_ubyte
-    from skimage.feature import greycomatrix, greycoprops
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.model_selection import train_test_split
+    
+    # Save the uploaded image
+    folder_path = r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\fassets\predictionimages"
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    
+    file_path = os.path.join(folder_path, fname)
+    FileSystemStorage().save(file_path, img)
+    path = "/static/fassets/predictionimages/" + fname  # Relative URL for the saved image
 
-    data = pd.read_csv('C:\\Users\\ACER\\Desktop\\All Folders\\FINAL YEAR POROJECT\\app\\myapp\\static\\features.csv')
-    X = data.values[1:, 0:5]
-    Y = data.values[1:, 5]
+    # Predict the stage of diabetic retinopathy
+    predicted_stage, confidence = predict_diabetic_retinopathy(file_path)
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
-    rgbImg = io.imread(
-        r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\\" + fname)  # images of disease in rgb
-    grayImg = img_as_ubyte(color.rgb2gray(rgbImg))  # images of disease gray
-    distances = [1, 2, 3]
-    angles = [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4]
-
-    glcm = greycomatrix(grayImg, distances=distances, angles=angles, symmetric=True, normed=True)
-
-    properties = ['energy', 'homogeneity', 'dissimilarity', 'correlation', 'contrast']
-    feats = np.hstack([greycoprops(glcm, 'energy').ravel() for prop in properties])
-    feats1 = np.hstack([greycoprops(glcm, 'homogeneity').ravel() for prop in properties])
-    feats2 = np.hstack([greycoprops(glcm, 'dissimilarity').ravel() for prop in properties])
-    feats3 = np.hstack([greycoprops(glcm, 'correlation').ravel() for prop in properties])
-    feats4 = np.hstack([greycoprops(glcm, 'contrast').ravel() for prop in properties])
-
-    aa = []
-    k = np.mean(feats)  # mean value of features
-    l = np.mean(feats1)
-    m = np.mean(feats2)
-    n = np.mean(feats3)
-    o = np.mean(feats4)
-    aa.append(k)  # append to array aa
-    aa.append(l)
-    aa.append(m)
-    aa.append(n)
-    aa.append(o)
-
-    arr = np.array([aa])
-    rf = RandomForestClassifier(n_estimators=100)
-    rf.fit(X_train, Y_train)
-    cls = rf.predict(arr)
-
-    res=Appointment.objects.get(id=id)
-    # Add to Database
-    print("Result : ", cls[0])
-
+    # Add prediction to the database
+    try:
+        res = Appointment.objects.get(id=id)
+    except Appointment.DoesNotExist:
+        return HttpResponse("<script>alert('Appointment not found.');window.location='/upload_retinal_doc/"+id+"';</script>")
+    
     obj = PredictionResult()
     obj.USER = res.USER
     obj.image = path
-    obj.result = cls[0]
+    obj.result = predicted_stage
     obj.date = datetime.datetime.now().strftime("%Y-%m-%d")
     obj.save()
 
-    return HttpResponse("<script>alert('Result : "+str(cls[0])+"');window.location='/upload_retinal_doc/"+id+"';</script>")
+    # Return response with the result
+    print("Result: ", predicted_stage)
+    return HttpResponse(
+        "<script>alert('Result: "+str(predicted_stage)+" with confidence: "+str(confidence*100)+"%');"
+        "window.location='/upload_retinal_doc/"+id+"';</script>"
+    )
 
 @csrf_exempt
 def appointment_history(request):
@@ -739,7 +742,7 @@ def viewprescription(request, id):
 
 def view_prediction_history(request, id):
     obj = PredictionResult.objects.filter(USER=id).order_by('-id')
-    return render(request, 'doctor/BChistory.html', {"data": obj})
+    return render(request, 'doctor/DRhistory.html', {"data": obj})
 
 
 def and_viewprescription(request):
