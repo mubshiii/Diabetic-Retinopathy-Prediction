@@ -2,49 +2,52 @@
 {#<html lang="en">#}
 {#<head>#}
 {#    <meta charset="UTF-8">#}
-{#    <title>Schedule Management</title>#}
+{#    <title>Appointment History</title>#}
 {#</head>#}
 {#<body>#}
-{#    <h2>Add Schedule</h2>#}
-{#    <form action="/schedule_post" method="post"><table width="358" border="1">#}
-{#        {% csrf_token %}#}
+{#<h2>Appointment History</h2>#}
+{#    <form action="/appointment_history_post" method="post">#}
+{#    <label for="SDate">Date Search:</label>#}
+{#    <input type="date" id="SDate" name="SDate">#}
+{##}
+{#    <button type="submit">Search</button>#}
+{#        <table width="358" border="1">#}
 {##}
 {#          <tr>#}
-{#            <td>Date</td>#}
-{#            <td><label for="Date"></label>#}
-{#              <input type="date" name="Date" id="date" placeholder="yyyy/mm/dd"/></td>#}
+{#            <td>Appointment No</td>#}
+{#            <td>Appointment Id</td>#}
+{#            <td>Username</td>#}
+{#            <td>Contact No</td>#}
+{#              <td>Email ID</td>#}
+{#           <td>Prescription</td>#}
+{#              <td>Talk to Patient</td>#}
 {#          </tr>#}
+{##}
+{#            {% for i in data %}#}
+{#            <tr>#}
+{#            <td>{{forloop.counter }}</td>#}
+{#            <td>{{ i.APPOINTMENT.id }}</td>#}
+{#            <td>{{ i.APPOINTMENT.USER.name }}</td>#}
+{#            <td>{{ i.APPOINTMENT.USER.phone_no }}</td>#}
+{#              <td>{{ i.APPOINTMENT.USER.email }}</td>#}
+{#                <td><a href="{{ i.Prescription }}">view</a> </td>#}
+{#                <td><a href="/chatt/{{ i.APPOINTMENT.USER.id }}">chat</a> </td>#}
+{#          </tr>#}
+{#            {% endfor %}#}
+{#        {% for i in data %}#}
 {##}
 {#          <tr>#}
-{#            <td>Starting Time</td>#}
-{#            <td><label for="From_Time"></label>#}
-{#              <input type="time" name="From_Time" id="From_Time" /></td>#}
+{#              <td>{{ i.Date }}</td>#}
+{##}
+{#            <td>{{ i.Time }}</td>#}
 {#          </tr>#}
-{##}
-{#         <tr>#}
-{#            <td>Ending Time</td>#}
-{#            <td><label for="To_Time"></label>#}
-{#              <input type="time" name="To_Time" id="To_Time" /></td>#}
-{#          </tr>#}
-{##}
-{#          <tr>#}
-{#            <td>Nof Token</td>#}
-{#            <td><label for="Token"></label>#}
-{#              <input type="text" name="Token" id="Token" /></td>#}
-{#          </tr>#}
-{##}
-{##}
-{#          <tr>#}
-{#            <td colspan="2"><div align="center">#}
-{#              <input type="submit" name="button" id="button" value="Confirm" />#}
-{#            </div></td>#}
-{#            </tr>#}
+{#             {% endfor %}#}
 {#        </table>#}
+{##}
 {#    </form>#}
-
+{##}
 {#</body>#}
 {#</html>#}
-
 
 
 
@@ -52,14 +55,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Care Plus</title>
+<title>Lumina Care</title>
 <!-- Stylesheets -->
-<link href="/static/assets/css/images/bootstrap.css" rel="stylesheet">
-<link href="/static/assets/css/images/style.css" rel="stylesheet">
+<link href="static/assets/css/images/bootstrap.css" rel="stylesheet">
+<link href="static/assets/css/images/style.css" rel="stylesheet">
 <!-- Responsive File -->
-<link href="/static/assets/css/images/responsive.css" rel="stylesheet">
+<link href="static/assets/css/images/responsive.css" rel="stylesheet">
 <!-- Color File -->
-<link href="/static/assets/css/images/color.css" rel="stylesheet">
+<link href="static/assets/css/images/color.css" rel="stylesheet">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,16 +72,15 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-<link rel="shortcut icon" href="/static/assets/images/logo.svg" type="image/x-icon">
-<link rel="icon" href="/static/assets/images/logo.png" type="image/x-icon">
+<link rel="shortcut icon" href="static/assets/images/logo.png" type="image/x-icon">
+<link rel="icon" href="static/assets/images/logo.png" type="image/x-icon">
 
 <!-- Responsive -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
 <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-
-    <style>
+  <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
   * {
     margin: 0;
@@ -256,7 +258,7 @@
   .formbold-w-45 {
     width: 45%;
   }
-{#        Schedule syle#}
+        Schedule syle
    .schedule_table
    {
        Display:flex;
@@ -295,7 +297,7 @@
                 <div class="inner-container">
                     <!--Logo-->
                     <div class="logo-box">
-                        <div class="logo"><a href="Doc_home"><img src="static/assets/icon/adminhome.png" style = "width:100px" alt=""></a></div>
+                        <div class="logo"><a href="Doc_home"><img src="static/assets/images/logo.png" style = "width:200px" alt=""></a></div>
                     </div>
 
                     <div class="link-btn"><a href="/" class="theme-btn btn-style-one"><span>Log Out</span></a></div>
@@ -311,13 +313,13 @@
                     <div class="inner-container">
                         <!--Logo-->
                         <div class="logo-box">
-{#                            <div class="logo"><a href="index.html"><img src="/static/assets/images/logo.png" alt=""></a></div>#}
+{#                            <div class="logo"><a href="index.html"><img src="static/assets/images/logo.svg" alt=""></a></div>#}
                             <h2>Logo</h2>
                         </div>
                         <!--Nav Box-->
                         <div class="nav-outer">
                             <!--Mobile Navigation Toggler-->
-                            <div class="mobile-nav-toggler"><img src="/static/assets/images/icons/icon-bar-2.png" alt=""></div>
+                            <div class="mobile-nav-toggler"><img src="static/assets/images/icons/icon-bar-2.png" alt=""></div>
 
                             <!-- Main Menu -->
                             <nav class="main-menu navbar-expand-md navbar-light">
@@ -342,7 +344,6 @@
     <!-- Page Title -->
 
 
-    <!-- Services Details -->
     <section class="service-details">
         <div class="auto-container">
             <div class="row">
@@ -353,73 +354,39 @@
 
   <div class="formbold-form-wrapper">
   <h2 style="padding-bottom: 3rem;">Add Schedule</h2>
-    <form action="/schedule_post" method="post" >
-        {% csrf_token %}
-      <div class="formbold-mb-3">
-        <label for="date" class="formbold-form-label"> Date </label>
-        <input type="date" name="Date" id="date" placeholder="yyyy/mm/dd" class="formbold-form-input" />
-      </div>
-      <div class="formbold-mb-3">
-        <label for="From_Time" class="formbold-form-label"> Starting Time </label>
-        <input type="time" name="From_Time" id="From_Time"  class="formbold-form-input" />
-      </div>
-      <div class="formbold-mb-3">
-        <label for="To_Time" class="formbold-form-label"> Ending Time </label>
-        <input type="time" name="To_Time" id="To_Time"  class="formbold-form-input" />
-      </div>
-      <div class="formbold-mb-3">
-        <label for="Token" class="formbold-form-label"> No of Tokens </label>
-        <input type="text" name="Token" id="Token" class="formbold-form-input" />
-      </div><div class="formbold-mb-3">
+        <form action="/updateschedule_post" method="post" >
+            {% csrf_token %}
+          <div class="formbold-mb-3">
+            <label for="date" class="formbold-form-label"> Date </label>
+            <input type="date" name="Date" value="{{ data.Date }}" id="date" placeholder="yyyy/mm/dd" class="formbold-form-input" />
+          </div>
+          <div class="formbold-mb-3">
+            <label for="From_Time" class="formbold-form-label"> Starting Time </label>
+            <input type="time" name="From_Time" id="From_Time"  class="formbold-form-input" required/>
+          </div>
+          <div class="formbold-mb-3">
+            <label for="To_Time" class="formbold-form-label"> Ending Time </label>
+            <input type="time" name="To_Time" id="To_Time"  class="formbold-form-input"  required/>
+          </div>
+          <div class="formbold-mb-3">
+            <label for="Token" class="formbold-form-label"> No of Tokens </label>
+            <input type="text" name="Token" id="Token" class="formbold-form-input"  required/>
+          </div>
+            <div class="formbold-mb-3">
             <label for="Fee" class="formbold-form-label"> Fees </label>
-            <input type="text" name="Fee" id="Fee" class="formbold-form-input" value="250" />
-        </div>
+            <input type="text" name="Fee" id="Fee" class="formbold-form-input" required />
+          </div>
 
 
 
 
-      <input style="margin-top: 3rem;"  class="theme-btn btn-style-one" type="submit" name="button" id="button" value="Add" />
+          <input style="margin-top: 3rem;"  class="theme-btn btn-style-one" type="submit" name="button" id="button" value="Add" />
 
-    </form>
+        </form>
 
-  </div>
-</div>
-    <div class="schedule_table">
-        <h2>Current Schedules</h2>
-
-
-        <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Starting Time</th>
-      <th scope="col">Ending Time</th>
-      <th scope="col">No of Tokens</th>
-      <th scope="col">Fees</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for i in data %}
-         <tr>
-         <td>{{ i.Date }}</td>
-         <td>{{ i.From_time }}</td>
-         <td>{{ i.To_Time }}</td>
-         <td>{{ i.Token }}</td>
-         <td>{{ i.fee }}</td>
-
-         <td><form action="/updateschedule" method="post"><input type="hidden" value="{{ i.id }}" name="sid"><button type="submit">Edit</button></form>
-         <p><a href="/deleteschedule/{{ i.id }}">Delete</a></p><form action="/appointments" method="post"></form>
-         <p><a href="/appointments/{{ i.id }}" class="btn btn-info">View Appointments</a></p></td>
-         </tr>
-             {% endfor %}
-  </tbody>
-</table>
-
-
-
-
+      </div>
     </div>
+
 
                 </div>
 
@@ -435,7 +402,7 @@
                                     <li class="active"><a href="/schedule">Schedule Management</a></li>
                                     <li><a href="/appointment_history">Appointment History</a></li>
                                     <li><a href="Review_View">View Rating & Review</a></li>
-                                    <li><a href="paymentHistory">View Payment History</a></li>
+                                    <li><a href="view_users">View Payment History</a></li>
                                     <li><a href="patients">Patients</a></li>
                                 </ul>
                             </div>
@@ -450,11 +417,10 @@
 
 
 
-
     <div class="footer-bottom">
         <div class="auto-container">
             <div class="content">
-                <p>Copyright © 2025 Care Plus.</p>
+                <p>Copyright © Care Plus 2025. All Rights Reserved.</p>
             </div>
         </div>
     </div>
@@ -464,24 +430,24 @@
 <!--Scroll to top-->
 <div class="scroll-to-top scroll-to-target" data-target="html"><span class="flaticon-right-arrow-4"></span></div>
 
-<script src="/static/assets/js/jquery.js"></script>
-<script src="/static/assets/js/popper.min.js"></script>
-<script src="/static/assets/js/bootstrap.min.js"></script>
-<script src="/static/assets/js/bootstrap-select.min.js"></script>
-<script src="/static/assets/js/jquery.fancybox.js"></script>
-<script src="/static/assets/js/isotope.js"></script>
-<script src="/static/assets/js/owl.js"></script>
-<script src="/static/assets/js/appear.js"></script>
-<script src="/static/assets/js/wow.js"></script>
+<script src="static/assets/js/jquery.js"></script>
+<script src="static/assets/js/popper.min.js"></script>
+<script src="static/assets/js/bootstrap.min.js"></script>
+<script src="static/assets/js/bootstrap-select.min.js"></script>
+<script src="static/assets/js/jquery.fancybox.js"></script>
+<script src="static/assets/js/isotope.js"></script>
+<script src="static/assets/js/owl.js"></script>
+<script src="static/assets/js/appear.js"></script>
+<script src="static/assets/js/wow.js"></script>
 <script src="astatic/ssets/js/lazyload.js"></script>
 <script src="astatic/ssets/js/scrollbar.js"></script>
-<script src="/static/assets/js/TweenMax.min.js"></script>
-<script src="/static/assets/js/swiper.min.js"></script>
-<script src="/static/assets/js/jquery.polyglot.language.switcher.js"></script>
-<script src="/static/assets/js/jquery.ajaxchimp.min.js"></script>
-<script src="/static/assets/js/parallax-scroll.js"></script>
+<script src="static/assets/js/TweenMax.min.js"></script>
+<script src="static/assets/js/swiper.min.js"></script>
+<script src="static/assets/js/jquery.polyglot.language.switcher.js"></script>
+<script src="static/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="static/assets/js/parallax-scroll.js"></script>
 
-<script src="/static/assets/js/script.js"></script>
+<script src="static/assets/js/script.js"></script>
 
 
 </body>

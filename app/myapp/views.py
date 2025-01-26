@@ -283,7 +283,7 @@ def schedule_post(request):
     scheduleObj.save()
     return HttpResponse("<script>alert('added');window.location='/schedule'</script>")
 
-
+@csrf_exempt
 def updateschedule(request):
     res = Schedule.objects.get(id=request.POST['sid'])
     return render(request, 'doctor/updateSchedule.html', {"data": res})
@@ -359,38 +359,7 @@ def register_doc_post(request):
 
 def appointments(request, id):
     request.session['aid'] = id
-    # request.session['aid']=request.POST['sid']
     res = Appointment.objects.filter(Schedule_id=id)
-    # res=Prescription.objects.filter(APPOINTMENT__Schedule=id)
-    # print(res)
-    # l=[]
-    # for i in Appointments:
-    #     if res.exists():
-    #         l.append({
-    #             "pstatus":"uploaded",
-    #             "uid":i.USER.id,
-    #             "name":i.USER.name,
-    #             "contact":i.USER.phone_no,
-    #             "email":i.USER.email,
-    #             "Time":i.Time,
-    #             "Schedule":i.Schedule.id,
-    #             "pdf": res[0].Prescription
-    #
-    #
-    #
-    #         })
-    #     else:
-    #         l.append({
-    #             "pstatus":"pending",
-    #             "uid":i.USER.id,
-    #             "name":i.USER.name,
-    #             "contact":i.USER.phone_no,
-    #             "email":i.USER.email,
-    #             "Time":i.Time,
-    #             "Schedule": i.Schedule.id,
-    #
-    #
-    #         })
     return render(request, 'doctor/viewAppointments.html', {"data": res})
 
 def upload_mri_doc(request, id):

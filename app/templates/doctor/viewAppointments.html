@@ -270,7 +270,7 @@
     }
     thead
     {
-        background-color:#247D7D;
+        background-color:#1492cd;
         color: white;
     }
 </style>
@@ -292,7 +292,7 @@
                 <div class="inner-container">
                     <!--Logo-->
                     <div class="logo-box">
-                        <div class="logo"><a href="Doc_home"><img src="https://ujwalvinay.com/project/logo.webp" style = "width:200px" alt=""></a></div>
+                        <div class="logo"><a href="Doc_home"><img src="static/assets/images/logo.png" style = "width:200px" alt=""></a></div>
                     </div>
 
                     <div class="link-btn"><a href="/" class="theme-btn btn-style-one"><span>Log Out</span></a></div>
@@ -308,7 +308,7 @@
                     <div class="inner-container">
                         <!--Logo-->
                         <div class="logo-box">
-{#                            <div class="logo"><a href=""><img src="static/assets/images/logo.svg" alt=""></a></div>#}
+{#                            <div class="logo"><a href=""><img src="static/assets/images/logo.png" alt=""></a></div>#}
                             <h2>Logo</h2>
                         </div>
                         <!--Nav Box-->
@@ -374,7 +374,7 @@
             <td>{{ i.Schedule.From_time}} to {{ i.Schedule.To_Time}}</td>
 {#                {% if i.pstatus == "pending" %}#}
             <td colspan="2">  <p><a href="/upload_prescription/{{ i.id}}">Upload Prescription</a></p>
-              <p><a href="/upload_mri_doc/{{ i.id}}">Ultrasound</a></p>
+              <p><a href="/upload_mri_doc/{{ i.id}}">Retinal image</a></p>
 
               <a href="/viewprescription/{{ i.id }}">Prescription</a> <p>
             <td>   <p><a href="/delete_prescription/{{ i.id }}">Delete</a></p> <p>
