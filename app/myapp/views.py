@@ -362,12 +362,12 @@ def appointments(request, id):
     res = Appointment.objects.filter(Schedule_id=id)
     return render(request, 'doctor/viewAppointments.html', {"data": res})
 
-def upload_mri_doc(request, id):
-    return render(request, "doctor/uploadMRI.html", {'aid':id})
-def upload_mri_doc_post(request, id):
+def upload_retinal_doc(request, id):
+    return render(request, "doctor/uploadretinalimage.html", {'aid':id})
+def upload_retinal_doc_post(request, id):
     img=request.FILES['mri']
     fname = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
-    FileSystemStorage().save(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\\" + fname, img)
+    FileSystemStorage().save(r"C:\Users\Mubashir\Desktop\Diabetic-Retinopathy-Prediction\app\myapp\static\fassets\predictionimages" + fname, img)
     path = "/static/" + fname
     import numpy as np
     import pandas as pd
@@ -424,7 +424,7 @@ def upload_mri_doc_post(request, id):
     obj.date = datetime.datetime.now().strftime("%Y-%m-%d")
     obj.save()
 
-    return HttpResponse("<script>alert('Result : "+str(cls[0])+"');window.location='/upload_mri_doc/"+id+"';</script>")
+    return HttpResponse("<script>alert('Result : "+str(cls[0])+"');window.location='/upload_retinal_doc/"+id+"';</script>")
 
 @csrf_exempt
 def appointment_history(request):
@@ -857,7 +857,7 @@ def android_view_prescription(request):
         p = "Not Available Yet!"
     return JsonResponse({"status": "ok", "prescription": p})
 
-def upload_mri(request):
+def upload_retinal(request):
 
     return None
 
