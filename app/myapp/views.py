@@ -374,7 +374,7 @@ import numpy as np
 from myapp.models import Appointment, PredictionResult  # Ensure correct imports for your models
 
 # Load the trained diabetic retinopathy model
-model = load_model("myapp/models/diabetic_retinopathy_model169_finetuned_20epochs.h5")
+model = load_model("myapp/models/FinalModel.h5")
 
 # Class labels for diabetic retinopathy
 class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
@@ -886,7 +886,7 @@ import numpy as np
 import tensorflow as tf
 
 # Load the trained model
-model = load_model("myapp/models/diabetic_retinopathy_model169_finetuned_20epochs.h5")
+model = load_model("myapp/models/FinalModel.h5")
 
 # Class labels
 class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
