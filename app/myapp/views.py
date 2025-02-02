@@ -893,33 +893,33 @@ model = load_model("myapp/models/FinalModel.h5")
 class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
 
 def is_retinal_image(img_path):
-    """
-    Check if the uploaded image is a retinal/fundus image.
-    This is a basic validation using OpenCV.
-    """
-    # Load the image
     img = cv2.imread(img_path)
     if img is None:
-        return False  # Invalid image file
+        return False
 
-    # Convert to grayscale
+    # Convert to grayscale and apply adaptive threshold
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, binary = cv2.threshold(blurred, 50, 255, cv2.THRESH_BINARY)
 
-    # Check for circular/elliptical shape (common in retinal images)
-    _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY)
+    # Detect contours
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
     if not contours:
-        return False  # No contours found
+        return False
 
-    # Check if the largest contour is roughly circular/elliptical
+    # Find largest contour
     largest_contour = max(contours, key=cv2.contourArea)
     perimeter = cv2.arcLength(largest_contour, True)
     area = cv2.contourArea(largest_contour)
-    circularity = 4 * np.pi * area / (perimeter ** 2)
 
-    # Threshold for circularity (adjust as needed)
-    return circularity > 0.6
+    # Circularity check
+    circularity = 4 * np.pi * area / (perimeter ** 2) if perimeter > 0 else 0
+
+    # Check for expected retinal image color
+    avg_color = np.mean(img, axis=(0, 1))  # Get average BGR color
+    is_fundus_color = avg_color[2] > avg_color[1] > avg_color[0]  # R > G > B in fundus images
+
+    return circularity > 0.6 and is_fundus_color
 
 def predict_diabetic_retinopathy(img_path):
     """Predict the stage of diabetic retinopathy from an image."""

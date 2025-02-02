@@ -126,6 +126,13 @@
                 <a href="{% url 'upload_image' %}" class="back-link">Upload another image</a>
             </div>
         {% endif %}
+
+        {% if error_message %}
+    <div class="alert alert-danger">
+        {{ error_message }}
+    </div>
+{% endif %}
+
     </div>
 
     <!-- Bootstrap JS and Popper.js for responsiveness and interaction -->
