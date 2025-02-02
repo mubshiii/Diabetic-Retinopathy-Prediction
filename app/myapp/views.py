@@ -878,11 +878,12 @@ def android_view_prediction(request):
 
 
 import os
+import cv2
+import numpy as np
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-import numpy as np
 import tensorflow as tf
 
 # Load the trained model
@@ -891,14 +892,47 @@ model = load_model("myapp/models/FinalModel.h5")
 # Class labels
 class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
 
+def is_retinal_image(img_path):
+    """
+    Check if the uploaded image is a retinal/fundus image.
+    This is a basic validation using OpenCV.
+    """
+    # Load the image
+    img = cv2.imread(img_path)
+    if img is None:
+        return False  # Invalid image file
+
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Check for circular/elliptical shape (common in retinal images)
+    _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    if not contours:
+        return False  # No contours found
+
+    # Check if the largest contour is roughly circular/elliptical
+    largest_contour = max(contours, key=cv2.contourArea)
+    perimeter = cv2.arcLength(largest_contour, True)
+    area = cv2.contourArea(largest_contour)
+    circularity = 4 * np.pi * area / (perimeter ** 2)
+
+    # Threshold for circularity (adjust as needed)
+    return circularity > 0.6
+
 def predict_diabetic_retinopathy(img_path):
     """Predict the stage of diabetic retinopathy from an image."""
+    # Check if the image is a retinal image
+    if not is_retinal_image(img_path):
+        return "Invalid Input: Please upload a retinal/fundus image.", 0.0
+
     # Load and preprocess the image
     img = image.load_img(img_path, target_size=(224, 224))
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     img_array = tf.keras.applications.densenet.preprocess_input(img_array)
-    
+
     # Make prediction
     predictions = model.predict(img_array)
     predicted_class = np.argmax(predictions)
@@ -910,17 +944,18 @@ def upload_image(request):
     predicted_stage = None
     confidence = None
     image_url = None
-    
+    error_message = None
+
     if request.method == 'POST' and request.FILES['image']:
         uploaded_image = request.FILES['image']
-        
+
         # Specify the folder where the image should be saved (e.g., 'uploads' folder inside 'media')
-        folder_path = os.path.join('myapp','static', 'assets','predictionimages')
-        
+        folder_path = os.path.join('myapp', 'static', 'assets', 'predictionimages')
+
         # Make sure the folder exists
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
-        
+
         # Save the uploaded image in the specified folder
         fs = FileSystemStorage(location=folder_path)
         filename = fs.save(uploaded_image.name, uploaded_image)
@@ -930,10 +965,17 @@ def upload_image(request):
         img_path = os.path.join(folder_path, filename)  # Path to the uploaded image
         predicted_stage, confidence = predict_diabetic_retinopathy(img_path)
 
+        # If the prediction is an error message, set the error_message
+        if isinstance(predicted_stage, str) and "Invalid Input" in predicted_stage:
+            error_message = predicted_stage
+            predicted_stage = None
+            confidence = None
+
         image_url = uploaded_image_path  # URL of the uploaded image
 
     return render(request, 'upload_and_predict.html', {
         'predicted_stage': predicted_stage,
         'confidence': confidence,
-        'image_url': image_url
+        'image_url': image_url,
+        'error_message': error_message
     })
