@@ -374,7 +374,7 @@ import numpy as np
 from myapp.models import Appointment, PredictionResult  # Ensure correct imports for your models
 
 # Load the trained diabetic retinopathy model
-model = load_model("myapp/models/FinalModel.h5")
+model = load_model("myapp/models/dr-densenet169.h5")
 
 # Class labels for diabetic retinopathy
 class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
@@ -887,7 +887,7 @@ from tensorflow.keras.preprocessing import image
 import tensorflow as tf
 
 # Load the trained model
-model = load_model("myapp/models/FinalModel.h5")
+model = load_model("myapp/models/dr-densenet169.h5")
 
 # Class labels
 class_labels = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative DR']
