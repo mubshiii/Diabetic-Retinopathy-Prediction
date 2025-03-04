@@ -486,6 +486,7 @@ def chatt(request, u):
     return render(request, 'doctor/chat.html', {'u': u})
 
 
+
 def chatsnd(request, u):
     d = datetime.datetime.now().strftime("%Y-%m-%d")
     # t=datetime.datetime.now().strftime("%H:%M:%S")
@@ -718,6 +719,7 @@ def add_chat(request):
     return JsonResponse({'status': "Inserted"})
 
 
+@csrf_exempt
 def view_chat(request):
     lid = request.POST['lid']
     toid = request.POST['toid']
