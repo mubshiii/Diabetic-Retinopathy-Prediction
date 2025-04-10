@@ -3,10 +3,8 @@ package com.example.diabeticretinopathyprediction;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,11 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class view_doc extends AppCompatActivity {
-    String[] id,doc_name, doc_email, doc_q, doc_phone, doc_img;
+    String[] id, doc_name, doc_email, doc_q, doc_phone, doc_img;
     ListView li;
     SharedPreferences sh;
     ProgressDialog pd;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,115 +35,69 @@ public class view_doc extends AppCompatActivity {
         setContentView(R.layout.activity_view_doc);
         sh = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         li = findViewById(R.id.li);
-        String url = sh.getString("url", "")+"/android_view_doc";
+        String url = sh.getString("url", "") + "/android_view_doc";
 
-        startService(new Intent(getApplicationContext(), Locationservice.class));
         pd = new ProgressDialog(view_doc.this);
         pd.setMessage("Fetching....");
         pd.show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                pd.dismiss();
-                stopService(new Intent(getApplicationContext(), Locationservice.class));
-            }
-        }, 3000);
-
 
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //  Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-
-                        // response
+                        pd.dismiss();
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             if (jsonObj.getString("status").equalsIgnoreCase("ok")) {
 
-                                JSONArray js= jsonObj.getJSONArray("users");
-                                id=new String[js.length()];
-                                doc_name=new String[js.length()];
-                                doc_email=new String[js.length()];
-                                doc_q=new String[js.length()];
-                                doc_phone=new String[js.length()];
-                                doc_img=new String[js.length()];
+                                JSONArray js = jsonObj.getJSONArray("users");
+                                id = new String[js.length()];
+                                doc_name = new String[js.length()];
+                                doc_email = new String[js.length()];
+                                doc_q = new String[js.length()];
+                                doc_phone = new String[js.length()];
+                                doc_img = new String[js.length()];
 
-//                                type=new String[js.length()];
-//                                discription=new String[js.length()];
-//                                image=new String[js.length()];
-//                                status=new String[js.length()];
-//
-//                                JSONArray js1= jsonObj.getJSONArray("rating");
-//                                rating=new String[js1.length()];
-
-                                for(int i=0;i<js.length();i++)
-                                {
-                                    JSONObject u=js.getJSONObject(i);
-                                    id[i]=u.getString("id");
-                                    doc_name[i]=u.getString("doc_name");
-                                   doc_email[i]=u.getString("email");
-                                  doc_q[i]=u.getString("doc_q");
-                                    doc_phone[i]=u.getString("doc_phone");
-                                    doc_img[i]=u.getString("doc_img");
-//                                    sta[i]=u.getString("status");
-
-
+                                for (int i = 0; i < js.length(); i++) {
+                                    JSONObject u = js.getJSONObject(i);
+                                    id[i] = u.getString("id");
+                                    doc_name[i] = u.getString("doc_name");
+                                    doc_email[i] = u.getString("email");
+                                    doc_q[i] = u.getString("doc_q");
+                                    doc_phone[i] = u.getString("doc_phone");
+                                    doc_img[i] = u.getString("doc_img");
                                 }
-//                                for(int i=0;i<js1.length();i++)
-//                                {
-//                                    JSONObject u=js1.getJSONObject(i);
-//                                    rating[i]=u.getString("rating");
-//
-//                                }
 
-                                // ArrayAdapter<String> adpt=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,name);
-                                li.setAdapter(new custom_view_doc(getApplicationContext(), id,doc_name, doc_email, doc_q, doc_phone,doc_img));
-                                // l1.setAdapter(new Custom(getApplicationContext(),gamecode,name,type,discription,image,status));
-                            }
-
-
-                            // }
-                            else {
+                                li.setAdapter(new custom_view_doc(getApplicationContext(), id, doc_name, doc_email, doc_q, doc_phone, doc_img));
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Not found", Toast.LENGTH_LONG).show();
                             }
 
-                        }    catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), "Error" + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
-                        Toast.makeText(getApplicationContext(), "eeeee" + error.toString(), Toast.LENGTH_SHORT).show();
+                        pd.dismiss();
+                        Toast.makeText(getApplicationContext(), "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
         ) {
             @Override
             protected Map<String, String> getParams() {
-                SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                Map<String, String> params = new HashMap<String, String>();
-
-                params.put("latitude", Locationservice.lati);
-                params.put("longitude", Locationservice.logi);
-//                params.put("mac",maclis);
-
-                return params;
+                return new HashMap<>(); // No location params
             }
         };
 
-        int MY_SOCKET_TIMEOUT_MS=100000;
-
+        int MY_SOCKET_TIMEOUT_MS = 100000;
         postRequest.setRetryPolicy(new DefaultRetryPolicy(
                 MY_SOCKET_TIMEOUT_MS,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(postRequest);
-
     }
 }

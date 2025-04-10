@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path
-
 from myapp import views
 
 urlpatterns = (
@@ -67,11 +66,11 @@ urlpatterns = (
     path('viewprescription/<id>',views.viewprescription),
     path('and_viewprescription',views.and_viewprescription),
     path('android_register',views.android_register),
-    path('prediction', views.prediction),
+   # path('prediction', views.prediction),
     path('android_view_prescription', views.android_view_prescription),
     path('android_view_prediction', views.android_view_prediction),
 
     #training
     path('train/', views.upload_image, name='upload_image'),
-
+    
 )

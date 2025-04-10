@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.conf import settings
 # Create your views here.
 import datetime
 import smtplib
@@ -68,13 +68,13 @@ def forgetpassword_post(request):
         except Exception as e:
             print("Couldn't setup email!!" + str(e))
 
-        msg = MIMEText("Password Information for Lumina Care " +psw)
+        msg = MIMEText("Password Information for Care Plus " +psw)
 
-        msg['Subject'] = 'Lumina Care'
+        msg['Subject'] = 'Care Plus'
 
         msg['To'] = l[0].username
 
-        msg['From'] = 'luminacarebcd@gmail.com'
+        msg['From'] = 'careplus@gmail.com '
 
         try:
 
@@ -481,12 +481,13 @@ def deleteprescription(request, id):
 
 
 # =============================================================dr chat==================================================
+@csrf_exempt
 def chatt(request, u):
     request.session['head'] = "CHAT"
     return render(request, 'doctor/chat.html', {'u': u})
 
 
-
+@csrf_exempt
 def chatsnd(request, u):
     d = datetime.datetime.now().strftime("%Y-%m-%d")
     # t=datetime.datetime.now().strftime("%H:%M:%S")
@@ -506,7 +507,7 @@ def chatsnd(request, u):
     # else:
     #     return redirect('/')
 
-
+@csrf_exempt
 def chatrply(request, u):
     try:
         c = request.session['lid']
@@ -547,8 +548,8 @@ def and_login(request):
 
 @csrf_exempt
 def android_view_doc(request):
-    latitude = request.POST['latitude']
-    longitude = request.POST['longitude']
+    latitude = request.POST.get('latitude', '')
+    longitude = request.POST.get('longitude', '')
     gcd_formula = "6371 * acos(least(greatest(cos(radians(%s)) * cos(radians('" + latitude + "')) * cos(radians('" + longitude + "') - radians(%s)) + sin(radians(%s)) * sin(radians('" + latitude + "')), -1), 1))"
     qry = Doctor.objects.filter(LOGIN__usertype="doctor")
     li = []
@@ -685,7 +686,7 @@ def android_view_reply(request):
         })
     return JsonResponse({"status": "ok", "users": ary})
 
-
+@csrf_exempt
 def and_send_complaint(request):
     lid = request.POST['lid']
 
@@ -699,7 +700,7 @@ def and_send_complaint(request):
     obj.save()
     return JsonResponse({"status": "ok"})
 
-
+@csrf_exempt
 def add_chat(request):
     lid = request.POST['lid']
     toid = request.POST['toid']
@@ -788,7 +789,7 @@ def android_register(request):
      return JsonResponse({"status": "ok"})
 
 
-def prediction(request):
+#def prediction(request):
     lid = request.POST['lid']
     fname = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
     # if os.path.exists(r"C:\Users\ACER\Desktop\All Folders\FINAL YEAR POROJECT\app\myapp\static\\" + fname):
